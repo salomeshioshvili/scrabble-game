@@ -1,0 +1,3 @@
+# Dictionary word list, one word per line.
+# Alphabetical ideally.
+# No logic — consumed by dictionary.py.
