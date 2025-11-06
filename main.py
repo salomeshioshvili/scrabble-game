@@ -3,3 +3,11 @@
 # - Continuously prompt the current player for a move until the game ends.
 # - Print the board, scores, and status updates.
 # - Do NOT implement gameplay logic here — delegate to game.py.
+from src.game import Game
+from src.UI.frontend import ScrabbleUI
+
+game = Game()
+ui = ScrabbleUI(game)
+
+ui.show()
+
