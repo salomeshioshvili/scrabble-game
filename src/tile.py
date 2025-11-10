@@ -7,7 +7,7 @@ class Tile:
         self.value = value
 
 
-def createTiles():
+def create_tiles():
     """Creates standard Scrabble tiles with their point values.
 
     Returns:
@@ -23,12 +23,8 @@ def createTiles():
         'Y': (4, 2), 'Z': (10, 1), '_': (0, 2) #"letter": (value, count). Also _ is a blank tile
     }
 
-    tileBag = []
+    tile_bag = []
     for letter, (value, count) in tile_distribution.items():
         for _ in range(count):
-            tileBag.append(Tile(letter, value))
-    return tileBag
-
-
-TestTiles = createTiles()
-print (f"Created {len(TestTiles)} tiles.")
+            tile_bag.append(Tile(letter, value))
+    return tile_bag
