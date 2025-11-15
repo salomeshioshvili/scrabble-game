@@ -44,3 +44,59 @@ def test_sample_bonus_layout():
     assert b.get_bonus(1, 1) == b.DOUBLE_WORD
     assert b.get_bonus(1, 5) == b.TRIPLE_LETTER
     assert b.get_bonus(0, 3) == b.DOUBLE_LETTER
+
+def test_is_center_occupied():
+    b = Board()
+    assert not b.is_center_occupied()
+    b.place_tile(7, 7, 'A')
+    assert b.is_center_occupied()
+
+def test_is_connected_first_word():
+    b = Board()
+    # First word must use center
+    assert not b.is_connected(0, 0)
+    assert b.is_connected(7, 7)
+
+def test_is_connected_adjacent_tiles():
+    b = Board()
+    b.place_tile(7, 7, 'A')
+    # Adjacent to center should be connected
+    assert b.is_connected(7, 8)
+    assert b.is_connected(6, 7)
+    assert not b.is_connected(5, 5)
+
+class MockTile:
+    def __init__(self, letter):
+        self.letter = letter
+
+def test_get_word_horizontal():
+    b = Board()
+    b.place_tile(5, 5, MockTile('C'))
+    b.place_tile(5, 6, MockTile('A'))
+    b.place_tile(5, 7, MockTile('T'))
+
+    word, start_col, tiles = b.get_word_horizontal(5, 6)
+    assert word == "CAT"
+    assert start_col == 5
+    assert len(tiles) == 3
+
+def test_get_word_vertical():
+    b = Board()
+    b.place_tile(5, 5, MockTile('D'))
+    b.place_tile(6, 5, MockTile('O'))
+    b.place_tile(7, 5, MockTile('G'))
+
+    word, start_row, tiles = b.get_word_vertical(6, 5)
+    assert word == "DOG"
+    assert start_row == 5
+    assert len(tiles) == 3
+
+def test_get_all_formed_words():
+    b = Board()
+    b.place_tile(5, 5, MockTile('C'))
+    b.place_tile(5, 6, MockTile('A'))
+    b.place_tile(5, 7, MockTile('T'))
+
+    words = b.get_all_formed_words([(5, 5), (5, 6), (5, 7)])
+    assert len(words) == 1
+    assert words[0][0] == "CAT"

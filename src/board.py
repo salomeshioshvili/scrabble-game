@@ -24,7 +24,7 @@ class Board:
         self.bonus_squares = self.initialize_bonus_squares()
 
     def initialize_bonus_squares(self):
-        """Initialise premium square positions"""
+        """Initialise bonus square positions"""
         bonus = [[self.NORMAL for _ in range(self.size)] for _ in range(self.size)]
 
         # Triple word scores (corners + middle edges)
@@ -88,4 +88,96 @@ class Board:
         """Check if center square (7,7) has a tile"""
         return self.grid[7][7] is not None
 
+    def is_connected(self, row, col):
+        """Check if position connects to existing tiles"""
+        if not self.is_center_occupied():
+            return row == 7 and col == 7  # First word must cover center
 
+        # Check if position already has tile or adjacent to one
+        if not self.is_empty(row, col):
+            return True
+
+        # Check all 4 adjacent positions
+        adjacent = [(row - 1, col), (row + 1, col), (row, col - 1), (row, col + 1)]
+        for r, c in adjacent:
+            if self.get_tile(r, c) is not None:
+                return True
+        return False
+
+    def get_word_horizontal(self, row, col):
+        """Extract horizontal word at position. Returns (word, start_col, tiles_used)"""
+        if not self.is_valid_position(row, col) or self.grid[row][col] is None:
+            return None, None, []
+
+        # Find start of word
+        start_col = col
+        while start_col > 0 and self.grid[row][start_col - 1] is not None:
+            start_col -= 1
+
+        # Find end of word
+        end_col = col
+        while end_col < self.size - 1 and self.grid[row][end_col + 1] is not None:
+            end_col += 1
+
+        # Extract word
+        if start_col == end_col:  # Single letter, not a word
+            return None, None, []
+
+        word = ""
+        tiles = []
+        for c in range(start_col, end_col + 1):
+            tile = self.grid[row][c]
+            word += tile.letter
+            tiles.append((row, c, tile))
+
+        return word, start_col, tiles
+
+    def get_word_vertical(self, row, col):
+        """Extract vertical word at position. Returns (word, start_row, tiles_used)"""
+        if not self.is_valid_position(row, col) or self.grid[row][col] is None:
+            return None, None, []
+
+        start_row = row
+        while start_row > 0 and self.grid[start_row - 1][col] is not None:
+            start_row -= 1
+
+        end_row = row
+        while end_row < self.size - 1 and self.grid[end_row + 1][col] is not None:
+            end_row += 1
+
+        if start_row == end_row:
+            return None, None, []
+
+        word = ""
+        tiles = []
+        for r in range(start_row, end_row + 1):
+            tile = self.grid[r][col]
+            word += tile.letter
+            tiles.append((r, col, tile))
+
+        return word, start_row, tiles
+
+    def get_all_formed_words(self, placed_positions):
+        """Return words created by newly placed tiles as (word, positions) pairs."""
+        words = []
+        checked_horizontal = set()
+        checked_vertical = set()
+
+        for row, col in placed_positions:
+            # Check horizontal word
+            h_key = (row, None)
+            if h_key not in checked_horizontal:
+                word, start_col, tiles = self.get_word_horizontal(row, col)
+                if word:
+                    words.append((word, tiles))
+                    checked_horizontal.add(h_key)
+
+            # Check vertical word
+            v_key = (None, col)
+            if v_key not in checked_vertical:
+                word, start_row, tiles = self.get_word_vertical(row, col)
+                if word:
+                    words.append((word, tiles))
+                    checked_vertical.add(v_key)
+
+        return words
