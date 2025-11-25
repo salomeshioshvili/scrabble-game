@@ -1,22 +1,30 @@
-from trie import Trie
+from pathlib import Path
+
+from .trie import Trie
 
 
 """Look up functionality using a Trie for efficient word validation."""
 class WordLookup:
-    def __init__(self, filepath="./data/words.txt"):
+    """
+    Lightweight wrapper around the Trie that loads the Scrabble dictionary.
+    """
+
+    def __init__(self, filepath: str | Path | None = None):
         self.trie = Trie()
-        self.load_words(filepath)
+        default_path = Path(__file__).resolve().parents[1] / "data" / "words.txt"
+        self.load_words(filepath or default_path)
 
     def clean(self, word: str) -> str:
         word = word.strip().lower()
         # Keep only alphabetic words (Scrabble uses A–Z)
         return word if word.isalpha() else ""
 
-    def load_words(self, filepath: str):
-        print("Loading dictionary...")
+    def load_words(self, filepath: str | Path):
+        """Populate the trie with valid dictionary entries."""
+        path = Path(filepath)
         count = 0
 
-        with open(filepath, "r") as file:
+        with path.open("r", encoding="utf-8") as file:
             for line in file:
                 word = self.clean(line)
                 if word:
@@ -27,4 +35,3 @@ class WordLookup:
 
     def is_valid_word(self, word: str) -> bool:
         return self.trie.search(word.lower())
-    

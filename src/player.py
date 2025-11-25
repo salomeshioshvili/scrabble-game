@@ -1,19 +1,21 @@
-# test commit from scrabble-game repo
+from __future__ import annotations
 
 from collections import deque
 import random
-from typing import List, Optional, Deque
+from typing import Deque, List, Optional, Sequence, Union
+
+from .tile import Tile, create_tiles
 
 
 # ================================================================
-# PLAYER CLASS (LETTER-ONLY VERSION)
+# PLAYER CLASS
 # ================================================================
 class Player:
     """
-    Represents a Scrabble-style player who holds a rack of letter tiles.
+    Represents a Scrabble-style player who holds a rack of Tile objects.
     """
 
-    def __init__(self, name: str, rack: Optional[List[str]] = None, score: int = 0):
+    def __init__(self, name: str, rack: Optional[List[Tile]] = None, score: int = 0):
         """
         Initialize a player with a name, optional rack, and initial score.
 
@@ -21,18 +23,18 @@ class Player:
         ----------
         name : str
             Player name.
-        rack : list[str] or None, optional
-            Initial letters. A new empty rack is created if None.
+        rack : list[Tile] or None, optional
+            Initial tiles. A new empty rack is created if None.
         score : int, optional
             Starting score (default is 0).
         """
         self.name: str = name
         # Copy to avoid mutating a list passed from outside
-        self.rack: List[str] = rack.copy() if rack is not None else []
+        self.rack: List[Tile] = rack.copy() if rack is not None else []
         self.score: int = score
         self.passes: int = 0
 
-    def draw_tiles(self, tile_bag: List[str], x: int) -> None:
+    def draw_tiles(self, tile_bag: List[Tile], x: int) -> None:
         """
         Draw X tiles from the tile bag and add them to the player's rack.
 
@@ -43,35 +45,53 @@ class Player:
                 break
             self.rack.append(tile_bag.pop())
 
-    def add_tile(self, letter: str) -> None:
-        """Add a single letter tile to the player's rack."""
-        self.rack.append(letter)
+    def add_tile(self, tile: Tile) -> None:
+        """Add a single Tile object to the player's rack."""
+        self.rack.append(tile)
 
-    def remove_tiles(self, letters_to_remove: List[str], strict: bool = False) -> bool:
+    def remove_tiles(self, tiles_to_remove: Sequence[Union[Tile, str]], strict: bool = False) -> bool:
         """
-        Remove multiple letters from the player's rack.
+        Remove multiple tiles from the player's rack.
 
         If strict is True, it removes nothing and returns False if
-        any requested letter is missing.
+        any requested tile is missing.
         """
-        if strict and not self.has_tiles(letters_to_remove):
+        if strict and not self.has_tiles(tiles_to_remove):
             return False
 
-        for letter in letters_to_remove:
-            if letter in self.rack:
-                self.rack.remove(letter)
+        for tile in tiles_to_remove:
+            match = self._match_tile(tile)
+            if match:
+                self.rack.remove(match)
         return True
 
-    def has_tiles(self, letters: List[str]) -> bool:
+    def has_tiles(self, tiles: Sequence[Union[Tile, str]]) -> bool:
         """
-        Check if the player has all letters needed.
+        Check if the player has all tiles needed.
         """
         temp_rack = self.rack.copy()
-        for letter in letters:
-            if letter not in temp_rack:
+        for tile in tiles:
+            match = None
+            if isinstance(tile, Tile):
+                match = tile if tile in temp_rack else None
+            else:
+                for rack_tile in temp_rack:
+                    if rack_tile.letter == tile:
+                        match = rack_tile
+                        break
+            if not match:
                 return False
-            temp_rack.remove(letter)
+            temp_rack.remove(match)
         return True
+
+    def _match_tile(self, tile: Union[Tile, str]) -> Optional[Tile]:
+        if isinstance(tile, Tile):
+            return tile if tile in self.rack else None
+
+        for rack_tile in self.rack:
+            if rack_tile.letter == tile:
+                return rack_tile
+        return None
 
     def add_score(self, points: int) -> None:
         """Add points to the player's score."""
@@ -87,7 +107,7 @@ class Player:
 
     def __str__(self) -> str:
         """Return a readable summary of the player's name, score, and rack."""
-        rack_str = " ".join(self.rack)
+        rack_str = " ".join(tile.letter for tile in self.rack)
         return f"{self.name}: Score={self.score}, Rack=[{rack_str}]"
 
 
@@ -128,24 +148,13 @@ class TurnQueue:
 
 
 # ================================================================
-# TILE BAG — letters ONLY version
+# TILE BAG HELPERS
 # ================================================================
-def generate_tile_bag() -> List[str]:
+def generate_tile_bag() -> List[Tile]:
     """
-    Create a randomized Scrabble-style tile bag containing letter tiles.
+    Create a randomized Scrabble-style tile bag containing Tile objects.
     """
-    letters = {
-        "A": 9, "B": 2, "C": 2, "D": 4, "E": 12, "F": 2,
-        "G": 3, "H": 2, "I": 9, "J": 1, "K": 1, "L": 4,
-        "M": 2, "N": 6, "O": 8, "P": 2, "Q": 1, "R": 6,
-        "S": 4, "T": 6, "U": 4, "V": 2, "W": 2, "X": 1,
-        "Y": 2, "Z": 1
-    }
-
-    bag: List[str] = []
-    for letter, qty in letters.items():
-        bag.extend([letter] * qty)
-
+    bag = create_tiles()
     random.shuffle(bag)
     return bag
 
