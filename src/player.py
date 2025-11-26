@@ -1,15 +1,9 @@
 from __future__ import annotations
-
 from collections import deque
 import random
 from typing import Deque, List, Optional, Sequence, Union
-
 from .tile import Tile, create_tiles
 
-
-# ================================================================
-# PLAYER CLASS
-# ================================================================
 class Player:
     """
     Represents a Scrabble-style player who holds a rack of Tile objects.
@@ -60,7 +54,7 @@ class Player:
             return False
 
         for tile in tiles_to_remove:
-            match = self._match_tile(tile)
+            match = self.match_tile(tile)
             if match:
                 self.rack.remove(match)
         return True
@@ -84,7 +78,7 @@ class Player:
             temp_rack.remove(match)
         return True
 
-    def _match_tile(self, tile: Union[Tile, str]) -> Optional[Tile]:
+    def match_tile(self, tile: Union[Tile, str]) -> Optional[Tile]:
         if isinstance(tile, Tile):
             return tile if tile in self.rack else None
 
@@ -111,9 +105,6 @@ class Player:
         return f"{self.name}: Score={self.score}, Rack=[{rack_str}]"
 
 
-# ================================================================
-# TURN ORDER QUEUE
-# ================================================================
 class TurnQueue:
     """
     Represents a circular queue to manage player turn order.
@@ -146,7 +137,6 @@ class TurnQueue:
         """
         return [player.name for player in self.queue]
 
-
 # ================================================================
 # TILE BAG HELPERS
 # ================================================================
@@ -157,27 +147,3 @@ def generate_tile_bag() -> List[Tile]:
     bag = create_tiles()
     random.shuffle(bag)
     return bag
-
-
-# ================================================================
-# EXAMPLE USAGE
-# ================================================================
-if __name__ == "__main__":
-    bag = generate_tile_bag()
-
-    p1 = Player("Alice")
-    p2 = Player("Bob")
-    p3 = Player("Charlie")
-
-    # Give each player 7 letters
-    for p in (p1, p2, p3):
-        p.draw_tiles(bag, 7)
-
-    turn_order = TurnQueue([p1, p2, p3])
-
-    print("Initial Turn Order:", turn_order.get_turn_order())
-    print(turn_order.current_player(), "goes first")
-
-    turn_order.next_turn()
-    print("After rotation:", turn_order.get_turn_order())
-    print("Current turn:", turn_order.current_player())
