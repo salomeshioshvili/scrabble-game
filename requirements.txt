@@ -1,0 +1,11 @@
+# Python 3.11+
+# Scrabble Game Backend
+
+# Core Dependencies (Standard Library only)
+# No external packages required for game logic
+
+# Optional Development Dependencies
+# Uncomment as needed for testing/development:
+# pytest>=7.4.0          # Unit testing framework
+
+# Note: tkinter comes pre-installed with Python 3.11
