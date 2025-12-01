@@ -246,10 +246,10 @@ for move in possible_moves:
 
 | Operation | Time Complexity | Space Complexity | Description |
 |-----------|-----------------|------------------|-------------|
-| `_draw_bonus_cells()` | O(n²) | O(1) | Render bonus squares |
-| `_render_tiles()` | O(n²) | O(1) | Render all board tiles |
-| `_render_rack()` | O(r) | O(1) | Render player rack |
-| `_on_board_click()` | O(1) | O(1) | Handle click event |
+| `update_board()` | O(n²) | O(1) | Redraw entire board tile state |
+| `update_rack()` | O(r) | O(1) | Render player's rack tiles |
+| `cell_clicked()` | O(n²) | O(1) | Handle click + triggers full board redraw |
+| `update_display()` | O(n²) | O(1) | Refresh all UI elements |
 
 ---
 
