@@ -36,6 +36,18 @@ class ScrabbleUI:
         self.root.title("Scrabble")
         self.root.configure(bg="#1a1a1a")
 
+        # Determine a human player to display
+        human = None
+        if hasattr(self.game, "bot_players"):
+            bots = getattr(self.game, "bot_players", []) or []
+            for p in self.game.players:
+                if p not in bots:
+                    human = p
+                    break
+        if human is None:
+            human = self.game.players[0] if self.game.players else None
+        self.human_player = human
+
         # State
         self.board_buttons = []
         self.rack_buttons = []
@@ -225,8 +237,16 @@ class ScrabbleUI:
 
     def rack_clicked(self, idx: int):
         """Handle rack tile click."""
-        rack = self.game.current_player.rack
+        if self.human_player is None:
+            return
+
+        rack = self.human_player.rack
         if idx >= len(rack):
+            return
+
+        # Prevent interaction when it's not the human player's turn
+        if self.game.current_player is not self.human_player:
+            messagebox.showinfo("Not your turn", "You can view your tiles now. Play when it's your turn.")
             return
 
         tile = rack[idx]
@@ -242,6 +262,11 @@ class ScrabbleUI:
         """Submit current placements to game."""
         if not self.placements:
             messagebox.showwarning("No Move", "Place tiles on the board first!")
+            return
+
+        # Ensure it's the human player's turn before attempting to submit
+        if self.human_player is not None and self.game.current_player is not self.human_player:
+            messagebox.showwarning("Not your turn", "Wait until it's your turn to submit a move.")
             return
 
         success = self.game.play_move(self.placements)
@@ -346,7 +371,8 @@ class ScrabbleUI:
 
     def update_rack(self):
         """Update rack display using fixed-size Canvas tiles and show tile value clearly."""
-        rack = self.game.current_player.rack
+        # Always show the human player's rack (do not reveal bot racks)
+        rack = self.human_player.rack if self.human_player is not None else []
         placed_tiles = set(self.placements.values())
 
         for i, canvas in enumerate(self.rack_buttons):
@@ -359,12 +385,18 @@ class ScrabbleUI:
                     canvas.create_rectangle(2, 2, self.RACK_TILE_SIZE-2, self.RACK_TILE_SIZE-2, fill="#C0C0C0", outline=self.TILE_BORDER)
                 else:
                     is_selected = self.selected_rack_tile and self.selected_rack_tile[0] == i
-                    bg = "#FFD700" if is_selected else self.TILE_COLOR
+                    # If it's not the human's turn, show tiles subdued to indicate read-only
+                    if self.game.current_player is not self.human_player:
+                        bg = "#D3D3D3"  # subdued background
+                        fg_color = "#666666"
+                    else:
+                        bg = "#FFD700" if is_selected else self.TILE_COLOR
+                        fg_color = "#000000"
                     canvas.create_rectangle(2, 2, self.RACK_TILE_SIZE-2, self.RACK_TILE_SIZE-2, fill=bg, outline=self.TILE_BORDER)
                     # Large letter
-                    canvas.create_text(self.RACK_TILE_SIZE//2, self.RACK_TILE_SIZE//2 - 6, text=tile.letter, font=self.tile_letter_font, fill="#000000")
+                    canvas.create_text(self.RACK_TILE_SIZE//2, self.RACK_TILE_SIZE//2 - 6, text=tile.letter, font=self.tile_letter_font, fill=fg_color)
                     # Small value in corner
-                    canvas.create_text(self.RACK_TILE_SIZE - 10, self.RACK_TILE_SIZE - 10, text=str(tile.value), font=self.tile_value_font, fill="#000000", anchor="se")
+                    canvas.create_text(self.RACK_TILE_SIZE - 10, self.RACK_TILE_SIZE - 10, text=str(tile.value), font=self.tile_value_font, fill=fg_color, anchor="se")
             else:
                 # Empty rack slot background
                 canvas.create_rectangle(2, 2, self.RACK_TILE_SIZE-2, self.RACK_TILE_SIZE-2, fill="#8B7355", outline=self.TILE_BORDER)
@@ -385,6 +417,9 @@ class ScrabbleUI:
 
         status = f"▶ {player.name}'s Turn\n\n"
         status += f"Tiles Remaining: {tiles_left}\n"
+        # Show which player's tiles are being displayed
+        if self.human_player:
+            status += f"\nViewing tiles: {self.human_player.name}\n"
 
         if self.placements:
             status += f"\nPlaced: {len(self.placements)} tile(s)"
