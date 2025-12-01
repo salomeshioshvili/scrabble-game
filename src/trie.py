@@ -1,11 +1,10 @@
-
 """implements a Trie data structure for efficient word storage and retrieval."""
 
 class Trie:
 
     def __init__(self):
         self.root={}
-        
+
     def insert(self, word: str) -> None:
 
         cur=self.root
@@ -26,7 +25,7 @@ class Trie:
             cur=cur[letter]
 
         return '*' in cur
-        
+
     def startsWith(self, prefix: str) -> bool:
 
         cur=self.root
@@ -36,4 +35,3 @@ class Trie:
             cur=cur[letter]
 
         return True
-    
