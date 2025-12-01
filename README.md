@@ -193,7 +193,7 @@ Explore → Validate Prefix → Continue/Prune → Backtrack
 
 | Operation | Time Complexity | Space Complexity | Description |
 |-----------|-----------------|------------------|-------------|
-| `Player.__init__()` | O(1) | O(r) | Initialize player with rack |
+| `Player.__init__()` | O(r) | O(r) | Initialize player with rack |
 | `draw_tiles(bag, x)` | O(x) | O(1) | Draw x tiles from bag |
 | `add_tile(letter)` | O(1) | O(1) | Add tile to rack |
 | `remove_tiles(letters)` | O(r × k) | O(r) | Remove k tiles from rack |
