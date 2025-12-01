@@ -126,22 +126,15 @@ python main.py
 TurnQueue: [Player1] → [Player2] → [Player3] → [Player1]...
 ```
 
-### 4. Priority Queue / Max-Heap (Move Suggestions)
-**Purpose:** Rank and suggest best possible moves by score
+### 4. Linear Search (Move Selection)
+**Purpose:** Find the highest-scoring move from generated candidates
 
-```
-        (45, "QUARTZ")
-       /            \
-  (32, "JAZZ")    (28, "XENON")
-    /    \
-(15,...)  (12,...)
-```
-
-### 5. Backtracking (Move Generation)
-**Purpose:** Generate all valid word placements from rack tiles
-
-```
-Explore → Validate Prefix → Continue/Prune → Backtrack
+```python
+# Current implementation: O(M) linear scan
+for move in possible_moves:
+    score = calculate_move_score(board, move)
+    if score > best_score:
+        best_move = move
 ```
 
 ---
@@ -150,19 +143,19 @@ Explore → Validate Prefix → Continue/Prune → Backtrack
 
 ### Board Operations (`board.py`)
 
-| Operation | Time Complexity | Space Complexity | Description |
-|-----------|-----------------|------------------|-------------|
-| `__init__()` | O(n²) | O(n²) | Initialize n×n grid (n=15) |
-| `initialize_bonus_squares()` | O(n²) | O(n²) | Set up bonus positions |
-| `is_valid_position(row, col)` | O(1) | O(1) | Bounds checking |
-| `is_empty(row, col)` | O(1) | O(1) | Check if cell is empty |
-| `place_tile(row, col, tile)` | O(1) | O(1) | Place tile at position |
-| `get_tile(row, col)` | O(1) | O(1) | Retrieve tile at position |
-| `get_bonus(row, col)` | O(1) | O(1) | Get bonus type at position |
-| `is_connected(row, col)` | O(1) | O(1) | Check adjacency (4 neighbors) |
-| `get_word_horizontal(row, col)` | O(n) | O(n) | Extract horizontal word |
-| `get_word_vertical(row, col)` | O(n) | O(n) | Extract vertical word |
-| `get_all_formed_words(positions)` | O(k × n) | O(k × n) | Get all words from k placements |
+| Operation | Best Case | Worst Case | Space | Description |
+|-----------|-----------|------------|-------|-------------|
+| `__init__()` | O(n²) | O(n²) | O(n²) | Initialize n×n grid (n=15) |
+| `initialize_bonus_squares()` | O(n²) | O(n²) | O(n²) | Set up bonus positions |
+| `is_valid_position(row, col)` | O(1) | O(1) | O(1) | Bounds checking |
+| `is_empty(row, col)` | O(1) | O(1) | O(1) | Check if cell is empty |
+| `place_tile(row, col, tile)` | O(1) | O(1) | O(1) | Place tile at position |
+| `get_tile(row, col)` | O(1) | O(1) | O(1) | Retrieve tile at position |
+| `get_bonus(row, col)` | O(1) | O(1) | O(1) | Get bonus type at position |
+| `is_connected(row, col)` | O(1) | O(1) | O(1) | Check adjacency (4 neighbors) |
+| `get_word_horizontal(row, col)` | O(1) | O(n) | O(n) | Extract horizontal word |
+| `get_word_vertical(row, col)` | O(1) | O(n) | O(n) | Extract vertical word |
+| `get_all_formed_words(positions)` | O(k) | O(k × n) | O(k × n) | Get all words from k placements |
 
 **Where:** n = board size (15), k = number of tiles placed
 
@@ -172,19 +165,19 @@ Explore → Validate Prefix → Continue/Prune → Backtrack
 
 | Operation | Time Complexity | Space Complexity | Description |
 |-----------|-----------------|------------------|-------------|
-| `build_trie(words)` | O(W × L) | O(W × L × A) | Build trie from word list |
+| `build_trie(words)` | O(W × L) | O(W × L) | Build trie from word list |
 | `insert(word)` | O(m) | O(m) | Insert single word |
 | `is_valid(word)` | O(m) | O(1) | Check if word exists |
 | `is_prefix(prefix)` | O(m) | O(1) | Check if prefix is valid |
 | `search(word)` | O(m) | O(1) | Search for word |
 
-**Where:** W = number of words, L = average word length, m = query word length, A = alphabet size (26)
+**Where:** W = number of words, L = average word length, m = query word length, A = alphabet size (26, treated as constant)
 
 **Comparison with alternatives:**
 | Data Structure | Lookup | Insert | Space | Prefix Check |
 |----------------|--------|--------|-------|--------------|
-| **Trie** | O(m) | O(m) | O(W×L×A) | O(m) ✅ |
-| Hash Set | O(m) avg | O(m) | O(W×L) | O(W×m) ❌ |
+| **Trie** | O(m) | O(m) | O(W×L) | O(m) ✅ |
+| Hash Set | O(m) avg | O(m) | O(W×L) | O(W×L) ❌ |
 | Sorted Array | O(m log W) | O(W) | O(W×L) | O(m log W) |
 
 ---
@@ -193,7 +186,7 @@ Explore → Validate Prefix → Continue/Prune → Backtrack
 
 | Operation | Time Complexity | Space Complexity | Description |
 |-----------|-----------------|------------------|-------------|
-| `Player.__init__()` | O(1) | O(r) | Initialize player with rack |
+| `Player.__init__()` | O(r) | O(r) | Initialize player with rack |
 | `draw_tiles(bag, x)` | O(x) | O(1) | Draw x tiles from bag |
 | `add_tile(letter)` | O(1) | O(1) | Add tile to rack |
 | `remove_tiles(letters)` | O(r × k) | O(r) | Remove k tiles from rack |
@@ -218,45 +211,34 @@ Explore → Validate Prefix → Continue/Prune → Backtrack
 
 ---
 
-### Move Generation (`move_generator.py` - Backtracking)
-
-| Operation | Time Complexity | Space Complexity | Description |
-|-----------|-----------------|------------------|-------------|
-| `generate_all_moves()` | O(A × r! × n²) | O(r × n) | Generate all legal moves |
-| `find_anchors()` | O(n²) | O(n²) | Find valid placement points |
-| `extend_word()` | O(r! × m) | O(m) | Extend word with backtracking |
-
-**Where:** A = anchor points, r = rack size, n = board size, m = word length
-
-**Pruning Optimization:**
-- Without pruning: O(26^r) possible combinations
-- With Trie prefix pruning: Eliminates invalid branches early
-- Typical improvement: 90%+ reduction in search space
-
----
-
 ### Move Evaluation (`move_evaluator.py`)
 
 | Operation | Time Complexity | Space Complexity | Description |
 |-----------|-----------------|------------------|-------------|
-| `calculate_score(move)` | O(m) | O(1) | Score primary word |
-| `calculate_cross_words()` | O(k × n) | O(k) | Score perpendicular words |
-| `apply_bonuses()` | O(m) | O(1) | Apply multipliers |
+| `calculate_move_score()` | O(k × m + W × m) | O(W × m) | Calculate total score for a move |
 
-**Where:** m = word length, k = tiles placed, n = board size
+**Breakdown:**
+- Temporarily place/remove tiles: O(k)
+- `get_all_formed_words()`: O(k × m) worst-case
+- Score all words with bonuses: O(W × m)
+- Bingo check: O(1)
+
+**Where:** k = tiles placed (≤7), W = words formed, m = max word length (≤15)
 
 ---
 
-### Move Suggestion (`move_suggester.py` - Priority Queue)
+### Move Suggestion (`move_suggester.py`)
 
 | Operation | Time Complexity | Space Complexity | Description |
 |-----------|-----------------|------------------|-------------|
-| `build_heap(moves)` | O(M) | O(M) | Heapify all moves |
-| `get_best_move()` | O(log M) | O(1) | Extract max score move |
-| `get_top_k_moves(k)` | O(k log M) | O(k) | Get k best moves |
-| `insert_move(move)` | O(log M) | O(1) | Add new move to heap |
+| `suggest_best_move()` | O(M × (k × m + W × m)) | O(1) | Find highest-scoring move via linear scan |
 
-**Where:** M = number of possible moves
+**Breakdown:**
+- Iterate through M possible moves: O(M)
+- For each move, call `calculate_move_score()`: O(k × m + W × m)
+- Track best score/move: O(1)
+
+**Where:** M = number of possible moves, k = tiles placed, W = words formed, m = max word length
 
 ---
 
@@ -264,33 +246,20 @@ Explore → Validate Prefix → Continue/Prune → Backtrack
 
 | Operation | Time Complexity | Space Complexity | Description |
 |-----------|-----------------|------------------|-------------|
-| `_draw_bonus_cells()` | O(n²) | O(1) | Render bonus squares |
-| `_render_tiles()` | O(n²) | O(1) | Render all board tiles |
-| `_render_rack()` | O(r) | O(1) | Render player rack |
-| `_on_board_click()` | O(1) | O(1) | Handle click event |
+| `update_board()` | O(n²) | O(1) | Redraw entire board tile state |
+| `update_rack()` | O(r) | O(1) | Render player's rack tiles |
+| `cell_clicked()` | O(n²) | O(1) | Handle click + triggers full board redraw |
+| `update_display()` | O(n²) | O(1) | Refresh all UI elements |
 
 ---
-
-## 📈 Overall System Complexity
-
-### Per Turn Analysis
-
-| Phase | Time Complexity | Notes |
-|-------|-----------------|-------|
-| Generate Moves | O(A × r! × n²) | Dominated by backtracking |
-| Evaluate Moves | O(M × m) | Score each move |
-| Select Best Move | O(M) or O(k log M) | Heapify or extract k |
-| Validate & Place | O(m + k × n) | Dictionary + board update |
-| Update UI | O(n²) | Re-render board |
 
 ### Space Complexity Summary
 
 | Component | Space | Description |
 |-----------|-------|-------------|
 | Board | O(n²) | 15×15 grid |
-| Trie | O(W × L × A) | Dictionary storage |
+| Trie | O(W × L) | Dictionary storage |
 | Tile Bag | O(T) | 100 tiles |
-| Move List | O(M × m) | Generated moves |
 | Player Data | O(p × r) | Players with racks |
 
 ---
