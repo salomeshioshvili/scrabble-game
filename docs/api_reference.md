@@ -16,7 +16,7 @@ Methods:
 - is_empty(row: int, col: int) -> bool  
   True if position is valid and contains no tile.
 
-- place_tile(row: int, col: int, tile) -> bool  
+- place_tile(row: int, col: int, tile) -> bool
   Place `tile` if empty. Returns True on success.
 
 - get_tile(row: int, col: int) -> Tile | None  
@@ -42,6 +42,10 @@ Methods:
 - get_all_formed_words(placed_positions: Iterable[Tuple[int,int]]) -> List[Tuple[str, list]]
   Given newly placed positions, returns list of (word, tiles) for all formed words
   (horizontal and vertical). Does not mutate board.
+
+- are_placements_line(placements: Dict[Tuple[int,int], Tile]) -> bool
+  Validate that all placements form a single contiguous line (same row or column with no gaps).
+  Returns True if valid, False if placements are scattered or have gaps.
 
 ---
 
@@ -208,48 +212,48 @@ Properties:
 - turn_queue: TurnQueue
 
 Methods:
-- current_player() -> Player  
+- current_player() -> Player
   Return player whose turn it is.
 
-- is_bot_turn() -> bool  
+- is_bot_turn() -> bool
   True if current player is a bot (in bot_players).
 
-- play_bot_move() -> bool  
+- play_bot_move() -> bool
   If bot turn, suggest_best_move and play it (via play_move). Returns True if bot acted or passed.
 
 - play_move(placements: Dict[Tuple[int,int], Tile]) -> bool  
   Main move application routine:
   1. Validate tiles belong to current player and target cells are valid/empty.
   2. Validate connectivity (first move must use center).
-  3. Temporarily place tiles, extract formed words, validate against dictionary.
-  4. Calculate score via calculate_move_score and add to player.
-  5. Remove used tiles from rack, refill, reset passes and advance turn.
+  3. Validate placements form a contiguous line (are_placements_line).
+  4. Temporarily place tiles, extract formed words, validate against dictionary.
+  5. Calculate score via calculate_move_score and add to player.
+  6. Remove used tiles from rack, refill, reset passes and advance turn.
   Returns True if move completed, False if invalid (and reverts temporary placements).
 
-- revert_placements(positions: List[Tuple[int,int]]) -> None  
+- revert_placements(positions: List[Tuple[int,int]]) -> None
   Remove tiles from given positions (set to None).
 
-- is_game_over() -> bool  
+- is_game_over() -> bool
   Game end conditions:
   - All players have passed >= 2 times OR
   - tile_bag empty and at least one player has empty rack.
 
-- pass_turn() -> None  
+- pass_turn() -> None
   Current player increments pass counter and turn advances.
 
-- shuffle_rack() -> None  
+- shuffle_rack() -> None
   Shuffle current player's rack in-place.
 
 Helpers (internal):
-- validate_tiles(player: Player, moves: List[Tuple[Tuple[int,int], Tile]]) -> bool  
+- validate_tiles(player: Player, moves: List[Tuple[Tuple[int,int], Tile]]) -> bool
   Ensure tiles belong to player, positions valid and empty.
 
-- validate_connectivity(moves: List[Tuple[Tuple[int,int], Tile]]) -> bool  
+- validate_connectivity(moves: List[Tuple[Tuple[int,int], Tile]]) -> bool
   Ensure move touches existing tiles or covers center if board empty.
 
-- refill_rack(player: Player) -> None  
+- refill_rack(player: Player) -> None
   Draw tiles from tile_bag up to RACK_SIZE.
 
 --- 
 End of API reference.
-

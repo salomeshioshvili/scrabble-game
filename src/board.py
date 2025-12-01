@@ -170,3 +170,33 @@ class Board:
                     checked_vertical.add(v_key)
 
         return words
+
+    def are_placements_line(self, placements) -> bool:
+        """Check if all placements form a single line (row or column) with no gaps."""
+        if not placements or len(placements) == 1:
+            return True
+
+        positions = list(placements.keys())
+        rows = [pos[0] for pos in positions]
+        cols = [pos[1] for pos in positions]
+
+        # All on same row?
+        if len(set(rows)) == 1:
+            sorted_cols = sorted(cols)
+            # Check no gaps
+            for i in range(len(sorted_cols) - 1):
+                if sorted_cols[i + 1] - sorted_cols[i] != 1:
+                    return False
+            return True
+
+        # All on same column?
+        if len(set(cols)) == 1:
+            sorted_rows = sorted(rows)
+            # Check no gaps
+            for i in range(len(sorted_rows) - 1):
+                if sorted_rows[i + 1] - sorted_rows[i] != 1:
+                    return False
+            return True
+
+        # Not on same row or column
+        return False

@@ -77,6 +77,10 @@ class Game:
         if not self.validate_connectivity(moves):
             return False
 
+        # Check all placements are on same row or column with no gaps
+        if not self.board.are_placements_line(placements):
+            return False
+
         # Temporarily place tiles to validate words
         placed_positions = [coords for coords, _ in moves]
         for (row, col), tile in moves:
