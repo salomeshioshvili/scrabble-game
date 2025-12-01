@@ -1,8 +1,5 @@
-from __future__ import annotations
-
 import random
 from typing import Dict, Iterable, List, Tuple
-
 from .board import Board
 from .dictionary import WordLookup
 from .player import Player, TurnQueue, generate_tile_bag
@@ -11,7 +8,6 @@ from .move_evaluator import calculate_move_score
 from .move_suggester import suggest_best_move
 
 Placement = Dict[Tuple[int, int], Tile]
-
 
 class Game:
     """
@@ -135,9 +131,7 @@ class Game:
         """Shuffle the current player's rack."""
         random.shuffle(self.current_player.rack)
 
-    # ------------------------------------------------------------------
     # Helpers
-    # ------------------------------------------------------------------
     def validate_tiles(self, player: Player, moves: List[Tuple[Tuple[int, int], Tile]]) -> bool:
         for (row, col), tile in moves:
             if tile not in player.rack:

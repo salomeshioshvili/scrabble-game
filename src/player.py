@@ -1,27 +1,13 @@
-from __future__ import annotations
 from collections import deque
 import random
 from typing import Deque, List, Optional, Sequence, Union
 from .tile import Tile, create_tiles
 
 class Player:
-    """
-    Represents a Scrabble-style player who holds a rack of Tile objects.
-    """
+    """ Represents a Scrabble-style player who holds a rack of Tile objects. """
 
     def __init__(self, name: str, rack: Optional[List[Tile]] = None, score: int = 0):
-        """
-        Initialize a player with a name, optional rack, and initial score.
-
-        Parameters
-        ----------
-        name : str
-            Player name.
-        rack : list[Tile] or None, optional
-            Initial tiles. A new empty rack is created if None.
-        score : int, optional
-            Starting score (default is 0).
-        """
+        """ Initialize a player with a name, optional rack, and initial score. """
         self.name: str = name
         # Copy to avoid mutating a list passed from outside
         self.rack: List[Tile] = rack.copy() if rack is not None else []
@@ -31,7 +17,6 @@ class Player:
     def draw_tiles(self, tile_bag: List[Tile], x: int) -> None:
         """
         Draw X tiles from the tile bag and add them to the player's rack.
-
         Stops early if the tile bag is empty.
         """
         for _ in range(x):
@@ -44,10 +29,7 @@ class Player:
         self.rack.append(tile)
 
     def remove_tiles(self, tiles_to_remove: Sequence[Union[Tile, str]], strict: bool = False) -> bool:
-        """
-        Remove multiple tiles from the player's rack.
-
-        """
+        """ Remove multiple tiles from the player's rack. """
         if strict and not self.has_tiles(tiles_to_remove):
             return False
 
@@ -58,9 +40,7 @@ class Player:
         return True
 
     def has_tiles(self, tiles: Sequence[Union[Tile, str]]) -> bool:
-        """
-        Check if the player has all tiles needed.
-        """
+        """ Check if the player has all tiles needed. """
         temp_rack = self.rack.copy()
         for tile in tiles:
             match = None
@@ -100,9 +80,7 @@ class Player:
 
 
 class TurnQueue:
-    """
-    Represents queue to manage player turn order.
-    """
+    """ Represents queue to manage player turn order. """
 
     def __init__(self, players: List[Player]):
 
@@ -114,9 +92,7 @@ class TurnQueue:
         return self.queue[0]
 
     def next_turn(self) -> Player:
-        """
-        Advance to the next player's turn and return them.
-        """
+        """ Advance to the next player's turn and return them. """
         self.queue.rotate(-1)
         return self.queue[0]
 
@@ -125,9 +101,7 @@ class TurnQueue:
 
 
 def generate_tile_bag() -> List[Tile]:
-    """
-    Create a randomized Scrabble-style tile bag containing Tile objects.
-    """
+    """ Create a randomized Scrabble-style tile bag containing Tile objects."""
     bag = create_tiles()
     random.shuffle(bag)
     return bag

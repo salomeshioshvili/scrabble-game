@@ -1,23 +1,10 @@
-# - Generate all possible legal moves for a player's rack on the board.
-# - Use recursion + prefix pruning to avoid generating invalid words.
-# - Respect board adjacency rules and anchor points.
-# - This is a major DSA component (backtracking, pruning, search).
-# - Output should be a list of Move objects or similar structures.
-
-from typing import Dict, List, Tuple, Set
+from typing import Dict, List, Tuple
 from .board import Board
 from .tile import Tile
 from .dictionary import WordLookup
-import random
 
 def generate_moves(board: Board, rack: List[Tile], dictionary: WordLookup) -> List[Dict[Tuple[int, int], Tile]]:
-    """
-    Generate all valid moves for the given rack.
-    Simplified version - generates basic moves.
-
-    Returns:
-        List of possible placements {(row, col): Tile}
-    """
+    """ Generate all valid moves for the given rack. """
     moves = []
 
     if not board.is_center_occupied():

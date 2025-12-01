@@ -7,11 +7,11 @@ from ..tile import Tile
 
 class ScrabbleUI:
     PREMIUM_COLORS = {
-        "★": "#FFB6C1",  
-        "TW": "#E63946", 
+        "★": "#FFB6C1",
+        "TW": "#E63946",
         "DW": "#FFB6C1",
-        "TL": "#4EA8DE",  
-        "DL": "#90E0EF",  
+        "TL": "#4EA8DE",
+        "DL": "#90E0EF",
     }
 
     PREMIUM_TEXT = {
@@ -22,9 +22,9 @@ class ScrabbleUI:
         "DL": "DOUBLE\nLETTER\nSCORE",
     }
 
-    BOARD_BG = "#0A5F38"  
-    TILE_COLOR = "#F4E4C1"  
-    TILE_BORDER = "#8B7355"  
+    BOARD_BG = "#0A5F38"
+    TILE_COLOR = "#F4E4C1"
+    TILE_BORDER = "#8B7355"
 
 
     CELL_SIZE = 46

@@ -1,23 +1,9 @@
-# - Given a board and a move, compute total score.
-# - Apply letter and word multiplier bonuses.
-# - Score additional words formed perpendicularly.
-# - Keep this logic pure (no board mutations).
-
 from typing import Dict, Tuple
 from .board import Board
 from .tile import Tile
 
 def calculate_move_score(board: Board, placements: Dict[Tuple[int, int], Tile]) -> int:
-    """
-    Calculate the total score for a move including all formed words and bonuses.
-
-    Args:
-        board: Current board state
-        placements: Dictionary of {(row, col): Tile} for new placements
-
-    Returns:
-        Total score for the move
-    """
+    """ Calculate the total score for a move including all formed words and bonuses. """
     if not placements:
         return 0
 

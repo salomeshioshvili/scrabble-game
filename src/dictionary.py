@@ -1,13 +1,9 @@
 from pathlib import Path
-
 from .trie import Trie
-
 
 """Look up functionality using a Trie for efficient word validation."""
 class WordLookup:
-    """
-    Lightweight wrapper around the Trie that loads the Scrabble dictionary.
-    """
+    """ Lightweight wrapper around the Trie that loads the Scrabble dictionary. """
 
     def __init__(self, filepath: str | Path | None = None):
         self.trie = Trie()

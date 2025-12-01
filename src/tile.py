@@ -1,6 +1,3 @@
-# - Represent individual tiles with a letter and point value.
-# - Keep this file very lightweight.
-
 class Tile:
     def __init__(self, letter: str, value: int):
         self.letter = letter
