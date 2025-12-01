@@ -150,19 +150,19 @@ Explore → Validate Prefix → Continue/Prune → Backtrack
 
 ### Board Operations (`board.py`)
 
-| Operation | Time Complexity | Space Complexity | Description |
-|-----------|-----------------|------------------|-------------|
-| `__init__()` | O(n²) | O(n²) | Initialize n×n grid (n=15) |
-| `initialize_bonus_squares()` | O(n²) | O(n²) | Set up bonus positions |
-| `is_valid_position(row, col)` | O(1) | O(1) | Bounds checking |
-| `is_empty(row, col)` | O(1) | O(1) | Check if cell is empty |
-| `place_tile(row, col, tile)` | O(1) | O(1) | Place tile at position |
-| `get_tile(row, col)` | O(1) | O(1) | Retrieve tile at position |
-| `get_bonus(row, col)` | O(1) | O(1) | Get bonus type at position |
-| `is_connected(row, col)` | O(1) | O(1) | Check adjacency (4 neighbors) |
-| `get_word_horizontal(row, col)` | O(n) | O(n) | Extract horizontal word |
-| `get_word_vertical(row, col)` | O(n) | O(n) | Extract vertical word |
-| `get_all_formed_words(positions)` | O(k × n) | O(k × n) | Get all words from k placements |
+| Operation | Best Case | Worst Case | Space | Description |
+|-----------|-----------|------------|-------|-------------|
+| `__init__()` | O(n²) | O(n²) | O(n²) | Initialize n×n grid (n=15) |
+| `initialize_bonus_squares()` | O(n²) | O(n²) | O(n²) | Set up bonus positions |
+| `is_valid_position(row, col)` | O(1) | O(1) | O(1) | Bounds checking |
+| `is_empty(row, col)` | O(1) | O(1) | O(1) | Check if cell is empty |
+| `place_tile(row, col, tile)` | O(1) | O(1) | O(1) | Place tile at position |
+| `get_tile(row, col)` | O(1) | O(1) | O(1) | Retrieve tile at position |
+| `get_bonus(row, col)` | O(1) | O(1) | O(1) | Get bonus type at position |
+| `is_connected(row, col)` | O(1) | O(1) | O(1) | Check adjacency (4 neighbors) |
+| `get_word_horizontal(row, col)` | O(1) | O(n) | O(n) | Extract horizontal word |
+| `get_word_vertical(row, col)` | O(1) | O(n) | O(n) | Extract vertical word |
+| `get_all_formed_words(positions)` | O(k) | O(k × n) | O(k × n) | Get all words from k placements |
 
 **Where:** n = board size (15), k = number of tiles placed
 
