@@ -126,22 +126,15 @@ python main.py
 TurnQueue: [Player1] → [Player2] → [Player3] → [Player1]...
 ```
 
-### 4. Priority Queue / Max-Heap (Move Suggestions)
-**Purpose:** Rank and suggest best possible moves by score
+### 4. Linear Search (Move Selection)
+**Purpose:** Find the highest-scoring move from generated candidates
 
-```
-        (45, "QUARTZ")
-       /            \
-  (32, "JAZZ")    (28, "XENON")
-    /    \
-(15,...)  (12,...)
-```
-
-### 5. Backtracking (Move Generation)
-**Purpose:** Generate all valid word placements from rack tiles
-
-```
-Explore → Validate Prefix → Continue/Prune → Backtrack
+```python
+# Current implementation: O(M) linear scan
+for move in possible_moves:
+    score = calculate_move_score(board, move)
+    if score > best_score:
+        best_move = move
 ```
 
 ---
@@ -231,6 +224,21 @@ Explore → Validate Prefix → Continue/Prune → Backtrack
 - Bingo check: O(1)
 
 **Where:** k = tiles placed (≤7), W = words formed, m = max word length (≤15)
+
+---
+
+### Move Suggestion (`move_suggester.py`)
+
+| Operation | Time Complexity | Space Complexity | Description |
+|-----------|-----------------|------------------|-------------|
+| `suggest_best_move()` | O(M × (k × m + W × m)) | O(1) | Find highest-scoring move via linear scan |
+
+**Breakdown:**
+- Iterate through M possible moves: O(M)
+- For each move, call `calculate_move_score()`: O(k × m + W × m)
+- Track best score/move: O(1)
+
+**Where:** M = number of possible moves, k = tiles placed, W = words formed, m = max word length
 
 ---
 
