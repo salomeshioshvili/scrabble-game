@@ -7,11 +7,11 @@ from ..tile import Tile
 
 class ScrabbleUI:
     PREMIUM_COLORS = {
-        "★": "#FFB6C1",   # Center - pink like DW
-        "TW": "#E63946",  # Triple Word - dark red
-        "DW": "#FFB6C1",  # Double Word - pink
-        "TL": "#4EA8DE",  # Triple Letter - dark blue
-        "DL": "#90E0EF",  # Double Letter - light blue
+        "★": "#FFB6C1",  
+        "TW": "#E63946", 
+        "DW": "#FFB6C1",
+        "TL": "#4EA8DE",  
+        "DL": "#90E0EF",  
     }
 
     PREMIUM_TEXT = {
@@ -22,11 +22,11 @@ class ScrabbleUI:
         "DL": "DOUBLE\nLETTER\nSCORE",
     }
 
-    BOARD_BG = "#0A5F38"  # Dark green like real Scrabble board
-    TILE_COLOR = "#F4E4C1"  # Cream/beige for tiles
-    TILE_BORDER = "#8B7355"  # Brown border for tiles
+    BOARD_BG = "#0A5F38"  
+    TILE_COLOR = "#F4E4C1"  
+    TILE_BORDER = "#8B7355"  
 
-    # Fixed pixel sizes to avoid widget resizing when text changes
+
     CELL_SIZE = 46
     RACK_TILE_SIZE = 56
 

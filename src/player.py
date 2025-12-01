@@ -32,7 +32,7 @@ class Player:
         """
         Draw X tiles from the tile bag and add them to the player's rack.
 
-        Stops early if the tile bag is exhausted.
+        Stops early if the tile bag is empty.
         """
         for _ in range(x):
             if not tile_bag:
@@ -47,8 +47,6 @@ class Player:
         """
         Remove multiple tiles from the player's rack.
 
-        If strict is True, it removes nothing and returns False if
-        any requested tile is missing.
         """
         if strict and not self.has_tiles(tiles_to_remove):
             return False
@@ -88,40 +86,31 @@ class Player:
         return None
 
     def add_score(self, points: int) -> None:
-        """Add points to the player's score."""
         self.score += points
 
     def pass_turn(self) -> None:
-        """Increment the count of consecutive passes."""
         self.passes += 1
 
     def reset_passes(self) -> None:
-        """Reset the pass counter to zero."""
         self.passes = 0
 
     def __str__(self) -> str:
-        """Return a readable summary of the player's name, score, and rack."""
         rack_str = " ".join(tile.letter for tile in self.rack)
         return f"{self.name}: Score={self.score}, Rack=[{rack_str}]"
 
 
 class TurnQueue:
     """
-    Represents a circular queue to manage player turn order.
+    Represents queue to manage player turn order.
     """
 
     def __init__(self, players: List[Player]):
-        """
-        Initialize the turn queue with a list of players.
-        """
+
         if not players:
-            raise ValueError("TurnQueue requires at least one player.")
+            raise ValueError("There has to be at least one player to create a turn queue.")
         self.queue: Deque[Player] = deque(players)
 
     def current_player(self) -> Player:
-        """
-        Return the player whose turn it currently is.
-        """
         return self.queue[0]
 
     def next_turn(self) -> Player:
@@ -132,14 +121,9 @@ class TurnQueue:
         return self.queue[0]
 
     def get_turn_order(self) -> List[str]:
-        """
-        Return a list of player names representing current turn order.
-        """
         return [player.name for player in self.queue]
 
-# ================================================================
-# TILE BAG HELPERS
-# ================================================================
+
 def generate_tile_bag() -> List[Tile]:
     """
     Create a randomized Scrabble-style tile bag containing Tile objects.
