@@ -218,48 +218,6 @@ Explore → Validate Prefix → Continue/Prune → Backtrack
 
 ---
 
-### Move Generation (`move_generator.py` - Backtracking)
-
-| Operation | Time Complexity | Space Complexity | Description |
-|-----------|-----------------|------------------|-------------|
-| `generate_all_moves()` | O(A × r! × n²) | O(r × n) | Generate all legal moves |
-| `find_anchors()` | O(n²) | O(n²) | Find valid placement points |
-| `extend_word()` | O(r! × m) | O(m) | Extend word with backtracking |
-
-**Where:** A = anchor points, r = rack size, n = board size, m = word length
-
-**Pruning Optimization:**
-- Without pruning: O(26^r) possible combinations
-- With Trie prefix pruning: Eliminates invalid branches early
-- Typical improvement: 90%+ reduction in search space
-
----
-
-### Move Evaluation (`move_evaluator.py`)
-
-| Operation | Time Complexity | Space Complexity | Description |
-|-----------|-----------------|------------------|-------------|
-| `calculate_score(move)` | O(m) | O(1) | Score primary word |
-| `calculate_cross_words()` | O(k × n) | O(k) | Score perpendicular words |
-| `apply_bonuses()` | O(m) | O(1) | Apply multipliers |
-
-**Where:** m = word length, k = tiles placed, n = board size
-
----
-
-### Move Suggestion (`move_suggester.py` - Priority Queue)
-
-| Operation | Time Complexity | Space Complexity | Description |
-|-----------|-----------------|------------------|-------------|
-| `build_heap(moves)` | O(M) | O(M) | Heapify all moves |
-| `get_best_move()` | O(log M) | O(1) | Extract max score move |
-| `get_top_k_moves(k)` | O(k log M) | O(k) | Get k best moves |
-| `insert_move(move)` | O(log M) | O(1) | Add new move to heap |
-
-**Where:** M = number of possible moves
-
----
-
 ### UI Operations (`frontend.py`)
 
 | Operation | Time Complexity | Space Complexity | Description |
@@ -271,26 +229,13 @@ Explore → Validate Prefix → Continue/Prune → Backtrack
 
 ---
 
-## 📈 Overall System Complexity
-
-### Per Turn Analysis
-
-| Phase | Time Complexity | Notes |
-|-------|-----------------|-------|
-| Generate Moves | O(A × r! × n²) | Dominated by backtracking |
-| Evaluate Moves | O(M × m) | Score each move |
-| Select Best Move | O(M) or O(k log M) | Heapify or extract k |
-| Validate & Place | O(m + k × n) | Dictionary + board update |
-| Update UI | O(n²) | Re-render board |
-
 ### Space Complexity Summary
 
 | Component | Space | Description |
 |-----------|-------|-------------|
 | Board | O(n²) | 15×15 grid |
-| Trie | O(W × L × A) | Dictionary storage |
+| Trie | O(W × L) | Dictionary storage |
 | Tile Bag | O(T) | 100 tiles |
-| Move List | O(M × m) | Generated moves |
 | Player Data | O(p × r) | Players with racks |
 
 ---
