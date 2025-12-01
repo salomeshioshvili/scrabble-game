@@ -172,19 +172,19 @@ Explore → Validate Prefix → Continue/Prune → Backtrack
 
 | Operation | Time Complexity | Space Complexity | Description |
 |-----------|-----------------|------------------|-------------|
-| `build_trie(words)` | O(W × L) | O(W × L × A) | Build trie from word list |
+| `build_trie(words)` | O(W × L) | O(W × L) | Build trie from word list |
 | `insert(word)` | O(m) | O(m) | Insert single word |
 | `is_valid(word)` | O(m) | O(1) | Check if word exists |
 | `is_prefix(prefix)` | O(m) | O(1) | Check if prefix is valid |
 | `search(word)` | O(m) | O(1) | Search for word |
 
-**Where:** W = number of words, L = average word length, m = query word length, A = alphabet size (26)
+**Where:** W = number of words, L = average word length, m = query word length, A = alphabet size (26, treated as constant)
 
 **Comparison with alternatives:**
 | Data Structure | Lookup | Insert | Space | Prefix Check |
 |----------------|--------|--------|-------|--------------|
-| **Trie** | O(m) | O(m) | O(W×L×A) | O(m) ✅ |
-| Hash Set | O(m) avg | O(m) | O(W×L) | O(W×m) ❌ |
+| **Trie** | O(m) | O(m) | O(W×L) | O(m) ✅ |
+| Hash Set | O(m) avg | O(m) | O(W×L) | O(W×L) ❌ |
 | Sorted Array | O(m log W) | O(W) | O(W×L) | O(m log W) |
 
 ---
