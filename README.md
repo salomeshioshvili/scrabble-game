@@ -218,6 +218,22 @@ Explore → Validate Prefix → Continue/Prune → Backtrack
 
 ---
 
+### Move Evaluation (`move_evaluator.py`)
+
+| Operation | Time Complexity | Space Complexity | Description |
+|-----------|-----------------|------------------|-------------|
+| `calculate_move_score()` | O(k × m + W × m) | O(W × m) | Calculate total score for a move |
+
+**Breakdown:**
+- Temporarily place/remove tiles: O(k)
+- `get_all_formed_words()`: O(k × m) worst-case
+- Score all words with bonuses: O(W × m)
+- Bingo check: O(1)
+
+**Where:** k = tiles placed (≤7), W = words formed, m = max word length (≤15)
+
+---
+
 ### UI Operations (`frontend.py`)
 
 | Operation | Time Complexity | Space Complexity | Description |
