@@ -6,29 +6,12 @@ A Scrabble implementation in Python featuring advanced data structures and algor
 
 ## 📋 Table of Contents
 
-- [Features](#features)
 - [Project Structure](#project-structure)
 - [Installation](#installation)
 - [Usage](#usage)
 - [Data Structures & Algorithms](#data-structures--algorithms)
 - [Time & Space Complexity Analysis](#time--space-complexity-analysis)
-- [Development Roadmap](#development-roadmap)
 - [Contributors](#contributors)
-
----
-
-## ✨ Features
-
-| Feature | Status | Description |
-|---------|--------|-------------|
-| Trie-based Dictionary | ✅ Complete | O(m) word lookup and prefix validation |
-| 2D Array Board | ✅ Complete | 15×15 grid with premium squares |
-| Premium Square Scoring | ✅ Complete | Double/Triple letter and word multipliers |
-| Turn Management Queue | ✅ Complete | Circular queue for player turns |
-| Tile Bag System | ✅ Complete | Randomized tile distribution |
-| Graphical UI | ✅ Complete | Interactive board using game2dboard |
-| Priority Queue Move Suggestions | 🚧 In Progress | Heap-based best move selection |
-| AI Player | 🚧 In Progress | Computer opponent with strategy |
 
 ---
 
@@ -46,7 +29,6 @@ scrabble-game/
 │   ├── dsa_concepts.md    # DSA explanations
 │   └── game_rules.md      # Scrabble rules
 ├── src/
-│   ├── __init__.py
 │   ├── board.py           # Board representation & management
 │   ├── dictionary.py      # Trie-based word validation
 │   ├── game.py            # Game controller & state management
@@ -58,11 +40,7 @@ scrabble-game/
 │   └── UI/
 │       └── frontend.py    # Graphical user interface
 └── tests/
-    ├── __init__.py
     ├── test_board.py
-    ├── test_dictionary.py
-    ├── test_game.py
-    ├── test_move_generator.py
     └── test_pile.py
 ```
 
@@ -314,30 +292,6 @@ Explore → Validate Prefix → Continue/Prune → Backtrack
 | Tile Bag | O(T) | 100 tiles |
 | Move List | O(M × m) | Generated moves |
 | Player Data | O(p × r) | Players with racks |
-
----
-
-## 🗺️ Development Roadmap
-
-- [x] **Phase 1:** Basic game mechanics
-  - Board representation
-  - Tile management
-  - Player turns
-  
-- [ ] **Phase 2:** Move generator
-  - Anchor point detection
-  - Backtracking algorithm
-  - Prefix pruning
-  
-- [ ] **Phase 3:** Move evaluator
-  - Score calculation
-  - Bonus multipliers
-  - Cross-word scoring
-  
-- [ ] **Phase 4:** Priority queue integration
-  - Heap-based move ranking
-  - Top-k move suggestions
-  - AI player implementation
 
 ---
 
